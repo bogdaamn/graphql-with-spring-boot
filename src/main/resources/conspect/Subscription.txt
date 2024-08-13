@@ -1,0 +1,18 @@
+What is a Subscription in GraphQL?
+In GraphQL, a subscription is a type of operation that allows clients to receive real-time updates from the server.
+Unlike queries and mutations, which are single requests for data, subscriptions enable a continuous connection between
+the client and server, so that the server can send updates to the client whenever specific events occur.
+
+How Subscriptions Work
+Subscriptions typically work over a WebSocket connection, allowing the server to push data to the client as soon as an
+event happens, such as a new message in a chat application or an update to a data entry.
+
+Client Initiates Subscription: The client sends a subscription request to the server, specifying what type of events or
+data it wants to be notified about.
+Server Pushes Updates: When the event occurs on the server side (e.g., a new record is created, a status changes), the
+server automatically sends the relevant data to the client without the client having to make a new request.
+Example Use Cases for Subscriptions
+Real-time chat applications: Receiving new messages as soon as they are sent.
+Live sports updates: Getting score updates as they happen.
+Stock market applications: Receiving real-time updates on stock prices.
+Notification systems: Pushing alerts or notifications to users instantly.

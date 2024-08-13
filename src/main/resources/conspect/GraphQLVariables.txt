@@ -1,0 +1,94 @@
+What Are GraphQL Variables?
+In GraphQL, variables are a way to parameterize queries, mutations, and subscriptions. They allow you to pass dynamic
+values into your GraphQL operations without hardcoding them directly into the query or mutation. This makes your
+operations more flexible and reusable, and it helps to keep your queries cleaner, especially when dealing with large or
+complex operations.
+
+GraphQL Variables: Allow you to pass dynamic values into queries and mutations, making them more flexible, reusable, and secure.
+Declaration: Variables are declared with a $ prefix in the operation definition.
+Usage: Variables are passed separately when executing the operation, typically as a JSON object.
+
+Key Benefits of Using Variables:
+Clean and Readable Queries: By using variables, you can avoid embedding complex or lengthy values directly into the
+query string, which keeps the query itself more readable.
+
+Reusability: Variables make it easy to reuse the same query or mutation with different inputs, which is particularly
+useful in applications where the data being sent may change frequently.
+
+Security: Using variables can also help protect against certain injection attacks, as the variables are passed
+separately from the query.
+
+How to Use GraphQL Variables
+1. Click on the VARIABLES in the bottom left in altair plugin.
+
+2. Define variable that will be used like this -> "{
+                                                     "id" : 1
+                                                   }"
+
+3. Use the variable in the graphQL query - "query student ($id : ID) {
+                                              student(studentId: $id) {
+                                                id
+                                                firstName
+                                                lastName
+                                                fullName
+                                                learningSubjects (subjectNameFilters: [ MySQL]){
+                                                  id
+                                                  subjectName
+                                                  marksObtained
+                                                }
+                                              }
+                                            }"
+
+4. Be careful with defining the variable and only than using it.
+-------------------------------------------------------------------------------------------------------------------------
+Same way for the mutation:
+
+1.  {
+       "createStudentRequest": {
+         "firstName": "John",
+         "lastName": "Week",
+         "email": "john.week@Gmail.com",
+         "street": "Killer 45-A",
+         "city": "Johanesburg",
+         "subjectsLearning": [
+           {
+             "subjectName": "Java",
+             "marksObtained": 90
+           }
+         ]
+       }
+     }
+
+2. mutation student ($createStudentRequest : CreateStudentRequest){
+     createStudent(createStudentRequest: $createStudentRequest){
+       id
+       firstName
+       lastName
+       fullName
+       learningSubjects(subjectNameFilters : [All]) {
+         id
+         subjectName
+         marksObtained
+       }
+     }
+   }
+
+---------------------------------- Many Variables --------------------------------------------------------------------
+1. {
+     "id" : 1,
+     "subName" : "All"
+   }
+
+2. query getStudent ($id : ID, $subName : SubjectNameFilter) {
+     student(studentId: $id) {
+       id
+       firstName
+       lastName
+       fullName
+       learningSubjects (subjectNameFilters: [ $subName ]){
+         id
+         subjectName
+         marksObtained
+       }
+     }
+   }
