@@ -1,0 +1,43 @@
+# Due to the fact that graphQL was designed to be language agnostic Long as a type is not allowed to be used from the box.
+# Allowed types:
+# Int: A 32-bit signed integer.
+# Float: A signed double-precision floating-point value.
+# String: A UTF-8 character sequence.
+# Boolean: true or false.
+# ID: A unique identifier, often serialized as a string.
+
+type Query {
+    firstQuery : String
+    secondQuery : String
+    fullName(sampleRequest : SampleRequest) : String
+    student(studentId : ID) : StudentResponse
+}
+
+type StudentResponse {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String!
+    street: String!
+    city: String!
+    fullName: String
+    learningSubjects(subjectNameFilters : [SubjectNameFilter]) : [SubjectResponse!]
+}
+
+type SubjectResponse {
+    id : ID
+    subjectName : String
+    marksObtained : Float
+}
+
+input SampleRequest {
+    firstName : String!
+    lastName : String
+}
+# - don't forget to represent the enum in the schema in order to be able to use it
+enum SubjectNameFilter {
+    All,
+    Java
+    MySQL
+    MongoDB
+}

@@ -1,0 +1,98 @@
+In GraphQL, the terms Node and Edge are typically used in the context of implementing pagination and connection patterns, especially when dealing with collections of data. These concepts come from the Relay specification, which is a set of conventions for building GraphQL APIs, but they are commonly used even outside of Relay-specific implementations.
+
+1. Node:
+A Node represents an individual entity or item in your GraphQL schema.
+Every object that can be individually queried is often considered a node. For example, a Student, Subject, or User can be a node.
+In a typical implementation, each node has a unique ID that allows it to be retrieved or referenced individually.
+Example of a Node Type:
+graphql
+Copy code
+interface Node {
+  id: ID!
+}
+
+type Student implements Node {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  # other fields...
+}
+
+type Subject implements Node {
+  id: ID!
+  subjectName: String!
+  marksObtained: Float!
+  # other fields...
+}
+2. Edge:(the path)
+An Edge represents a connection between nodes, specifically in a list or connection. It usually includes the node itself and potentially additional information about the relationship or connection between nodes.
+The edge is part of the Connection pattern, which provides a standard way to handle pagination in GraphQL.
+Example of an Edge Type:
+graphql
+Copy code
+type StudentEdge {
+  node: Student
+  cursor: String!
+}
+node: The actual node (e.g., a Student) that this edge points to.
+cursor: A unique identifier used for pagination, indicating the position of the node in the connection.
+3. Connection:
+A Connection is a pattern for handling pagination of lists in GraphQL. It contains a list of edges, which in turn contain the nodes, along with additional pagination information like pageInfo.
+Example of a Connection Type:
+graphql
+Copy code
+type StudentConnection {
+  edges: [StudentEdge!]!
+  pageInfo: PageInfo!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+edges: A list of edges, each containing a node and a cursor.
+pageInfo: An object that provides information about the pagination state, such as whether there are more pages of data available.
+Putting It All Together:
+Here's how you might define a GraphQL schema using these concepts:
+
+graphql
+Copy code
+type Query {
+  students(first: Int, after: String): StudentConnection
+}
+
+type StudentConnection {
+  edges: [StudentEdge!]!
+  pageInfo: PageInfo!
+}
+
+type StudentEdge {
+  node: Student
+  cursor: String!
+}
+
+type Student implements Node {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  # other fields...
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+Explanation:
+Querying Students: When you query students, you get a StudentConnection, which contains a list of StudentEdge objects.
+Edges: Each edge contains a Student node and a cursor.
+PageInfo: This provides information about whether there are more students to load (pagination).
+Summary:
+Node: Represents an entity in the GraphQL schema.
+Edge: Represents a relationship between nodes, typically used in paginated lists.
+Connection: A pattern that provides a standardized way to handle pagination, containing edges and pagination information.

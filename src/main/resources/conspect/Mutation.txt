@@ -1,0 +1,80 @@
+A GraphQL mutation is a type of operation that allows clients to modify server-side data, such as creating, updating, or deleting records in a database. While queries in GraphQL are used to fetch or read data (similar to GET requests in REST), mutations are used to change data (similar to POST, PUT, PATCH, or DELETE requests in REST).
+
+Key Characteristics of GraphQL Mutations:
+State Change: Mutations are typically used when you want to change the state of data on the server. This includes operations like creating a new entity, updating an existing entity, or deleting an entity.
+
+Return Values: Unlike some REST endpoints, mutations in GraphQL can return complex data structures. This means that after performing a mutation, you can request specific fields of the modified data or related data in the response.
+
+Similar Syntax to Queries: The syntax for defining and executing mutations is very similar to queries. The main difference is the keyword mutation instead of query.
+
+Example of a GraphQL Mutation:
+Let's say you have a Student entity, and you want to create a new student. Here's how you might define and use a mutation in GraphQL.
+
+1. Defining a Mutation in the Schema:
+In your GraphQL schema, you define the mutation like this:
+
+graphql
+Copy code
+type Mutation {
+    createStudent(firstName: String!, lastName: String!, email: String!): Student
+}
+Mutation Type: This is a special type in GraphQL that defines all the mutation operations available in your API.
+createStudent: This is the name of the mutation. It takes three arguments (firstName, lastName, and email) and returns the created Student object.
+2. Implementing the Mutation Resolver in Java:
+In your backend (e.g., using Spring GraphQL), you would implement a resolver for this mutation:
+
+java
+Copy code
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.stereotype.Controller;
+
+@Controller
+public class StudentMutationResolver {
+
+    @MutationMapping
+    public Student createStudent(@Argument String firstName, @Argument String lastName, @Argument String email) {
+        // Logic to create and save the student
+        Student student = new Student();
+        student.setFirstName(firstName);
+        student.setLastName(lastName);
+        student.setEmail(email);
+
+        // Save the student to the database
+        saveStudentToDatabase(student);
+
+        return student;
+    }
+
+    private void saveStudentToDatabase(Student student) {
+        // Implement your data persistence logic here
+        // Example: studentRepository.save(student);
+    }
+}
+@MutationMapping: This annotation is used to indicate that this method is a resolver for a mutation.
+Return Value: The mutation returns the created Student object, which can be customized in the response.
+3. Executing the Mutation from the Client:
+To create a new student, a client would send a mutation like this:
+
+graphql
+Copy code
+mutation {
+  createStudent(firstName: "John", lastName: "Doe", email: "john.doe@example.com") {
+    id
+    firstName
+    lastName
+    email
+  }
+}
+mutation Keyword: Indicates that this operation is a mutation.
+Returned Data: After creating the student, the mutation returns the id, firstName, lastName, and email of the newly created student.
+When to Use Mutations:
+Creating Records: When you need to create new records, such as adding a new user, product, or any other entity.
+Updating Records: When you need to modify existing records, like changing a user's email address or updating a product's price.
+Deleting Records: When you need to remove records from the database.
+Benefits of GraphQL Mutations:
+Flexible Responses: You can specify exactly what data you want to return after the mutation, avoiding the need for additional queries.
+Batch Operations: You can group multiple operations into a single mutation, allowing you to create or update multiple records in one request.
+Summary:
+GraphQL mutations are used to modify data on the server (create, update, delete).
+They are defined in the schema using the Mutation type and are similar in syntax to queries.
+Mutations can return specific fields from the modified data, providing flexibility in the response.
